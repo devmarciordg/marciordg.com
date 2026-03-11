@@ -341,22 +341,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (result.success) {
           errorBox.style.color = '#00ff88';
-          errorBox.innerHTML = 'Sucesso!';
+          errorBox.innerHTML = 'Sucesso! Seu contato foi enviado.';
 
-          if (typeof fbq === 'function') {
-            fbq(
-              'track',
-              'Lead',
-              {
-                value: result.dados_lead.valor,
-                currency: 'BRL',
-                content_category: result.dados_lead.desafio,
-              },
-              {
-                eventID: result.dados_lead.transaction_id,
-              }
-            );
-          }
+          form.reset();
+
+          document.querySelectorAll('.cta__form__item').forEach((option) => {
+            option.classList.remove('active');
+          });
+
+          setTimeout(() => {
+            errorBox.innerHTML = '';
+          }, 5000);
 
           window.dataLayer = window.dataLayer || [];
           window.dataLayer.push({
