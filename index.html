@@ -71,45 +71,62 @@
       type="font/woff2"
       crossorigin="anonymous"
     />
-    <script defer>
-      !(function (f, b, e, v, n, t, s) {
-        if (f.fbq) return;
-        n = f.fbq = function () {
-          n.callMethod
-            ? n.callMethod.apply(n, arguments)
-            : n.queue.push(arguments);
+
+    <script>
+      (function () {
+        function initFacebookPixel() {
+          if (window.fbq) return;
+
+          window.fbq = function () {
+            fbq.callMethod
+              ? fbq.callMethod.apply(fbq, arguments)
+              : fbq.queue.push(arguments);
+          };
+          if (!window._fbq) window._fbq = window.fbq;
+          window.fbq.push = window.fbq;
+          window.fbq.loaded = !0;
+          window.fbq.version = '2.0';
+          window.fbq.queue = [];
+
+          const t = document.createElement('script');
+          t.async = true;
+          t.src = 'https://connect.facebook.net/en_US/fbevents.js';
+          const s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(t, s);
+
+          fbq('init', '779734480562524');
+          window.pvEventId =
+            'pv_' + Math.random().toString(36).slice(2, 11) + '_' + Date.now();
+          fbq('track', 'PageView', {}, { eventID: window.pvEventId });
+        }
+
+        const loadScripts = () => {
+          if (window.trackingLoaded) return;
+          window.trackingLoaded = true;
+          initFacebookPixel();
+          console.log('Pixel da Meta carregado via interação.');
         };
-        if (!f._fbq) f._fbq = n;
-        n.push = n;
-        n.loaded = !0;
-        n.version = '2.0';
-        n.queue = [];
-        t = b.createElement(e);
-        t.async = !0;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s);
-      })(
-        window,
-        document,
-        'script',
-        'https://connect.facebook.net/en_US/fbevents.js'
-      );
 
-      fbq('init', '779734480562524');
+        const events = ['scroll', 'mousemove', 'touchstart', 'keydown'];
+        events.forEach((evt) =>
+          window.addEventListener(evt, loadScripts, {
+            once: true,
+            passive: true,
+          })
+        );
 
-      window.pvEventId =
-        'pv_' + Math.random().toString(36).slice(2, 11) + '_' + Date.now();
-
-      fbq('track', 'PageView', {}, { eventID: window.pvEventId });
+        setTimeout(loadScripts, 5000);
+      })();
     </script>
-    <noscript
-      ><img
+
+    <noscript>
+      <img
         height="1"
         width="1"
         style="display: none"
         src="https://www.facebook.com/tr?id=779734480562524&ev=PageView&noscript=1"
-    /></noscript>
+      />
+    </noscript>
   </head>
   <body>
     <header>
