@@ -43,20 +43,31 @@
     }
 
     &__tag {
-        font-size: x.$text-base;
-        background-color: var(--primary-t);
-        display: block;
+        font-size: x.$text-xs;
+        display: flex;
+        align-items: center;
+        gap: x.$u2;
         width: fit-content;
-        padding: x.$u2 x.$u5;
-        border-radius: 0 x.$u1 x.$u1 0;
         color: var(--primary);
-        @include x.space(600);
-        border-left: 4px solid var(--primary);
+        @include x.mono(700);
+        text-transform: uppercase;
+        letter-spacing: 0.24em;
+
+        &::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            flex: none;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 8px var(--primary);
+        }
     }
 
     &__title {
         font-size: 56px;
-        line-height: 6.4rem;
+        line-height: 1.02;
+        letter-spacing: -0.02em;
         font-weight: 800;
     }
 
@@ -81,6 +92,9 @@
         align-items: center;
         color: var(--light-2);
         gap: x.$u1;
+        @include x.mono(600);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
 
         svg {
             width: 10px;
@@ -102,7 +116,7 @@
         justify-content: end;
         padding: x.$u6;
         width: 75%;
-        border-radius: x.$u2;
+        border-radius: 0;
         border: 1px solid var(--light-3);
         position: relative;
         overflow: hidden;
@@ -121,7 +135,8 @@
 
         &__insta {
             z-index: 2;
-            @include x.space(600);
+            @include x.mono(700);
+            letter-spacing: 0.08em;
             color: var(--primary);
         }
 
@@ -147,7 +162,7 @@
         display: flex;
         background-color: var(--dark-3);
         padding: x.$u1;
-        border-radius: x.$u2;
+        border-radius: 0;
         border: 1px solid var(--light-3);
 
         &:focus-within {
@@ -175,10 +190,11 @@
             display: flex;
             align-items: center;
             gap: x.$u2;
-            font-size: x.$text-base;
+            font-size: x.$text-sm;
             padding: x.$u3 x.$u6;
-            border-radius: x.$u1;
-            @include x.space(600);
+            border-radius: x.$radius-sm;
+            @include x.mono(700);
+            letter-spacing: 0.08em;
             text-transform: uppercase;
 
             svg {

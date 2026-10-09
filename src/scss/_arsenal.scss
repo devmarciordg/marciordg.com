@@ -16,13 +16,22 @@
     }
 
     &__tag {
-        background-color: var(--dark-2);
-        padding: x.$u1 x.$u3;
+        background-color: transparent;
+        padding: x.$u2 x.$u4;
         color: var(--light-2);
-        border-radius: x.$u6;
+        border-radius: 0;
         border: solid 1px var(--light-3);
-        font-size: x.$text-base;
+        font-size: x.$text-xs;
+        @include x.mono(700);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
         user-select: none;
+        transition: color 200ms ease-in-out, border-color 200ms ease-in-out;
+
+        &:hover {
+            color: var(--light-1);
+            border-color: var(--light-2);
+        }
     }
 
     &__content {
@@ -33,6 +42,7 @@
     }
 
     &__card {
+        @include x.scanline-hover;
         flex: 1;
         min-width: 300px;
         transition: all 300ms ease-in-out;
@@ -43,7 +53,7 @@
             width: 32px;
             height: 32px;
             padding: x.$u1;
-            border-radius: x.$u1;
+            border-radius: x.$radius-sm;
         }
 
         &:hover {

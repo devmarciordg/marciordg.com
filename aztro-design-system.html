@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AZTRO | Design System — Documentação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    /* FUNDO / SUPERFÍCIE */
+    --bg:            #060605;
+    --bg-panel:      #0e0e0d;
+    --bg-panel-hi:   #151513;
+    /* BORDA */
+    --line:          #2a2a27;
+    --line-soft:     #1b1b19;
+    /* TEXTO */
+    --ink:           #f1efe6;
+    --ink-dim:       #918f84;
+    --ink-faint:     #4c4a44;
+    /* ACCENT */
+    --amber:         #c8c8bd;
+    --amber-dim:     #38372f;
+    --amber-wash:    rgba(200,200,189,.06);
+    /* STATUS */
+    --green:         #35d48a;
+
+    /* TIPOGRAFIA */
+    --display: 'Space Grotesk', sans-serif;
+    --mono: 'Space Mono', monospace;
+
+    /* LAYOUT */
+    --pad: clamp(20px, 5vw, 64px);
+    --maxw: 1320px;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+  }
+
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--display);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  /* starfield */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, rgba(241,239,230,.5) 0, transparent 60%),
+      radial-gradient(1px 1px at 80% 10%, rgba(241,239,230,.4) 0, transparent 60%),
+      radial-gradient(1.5px 1.5px at 60% 70%, rgba(241,239,230,.35) 0, transparent 60%),
+      radial-gradient(1px 1px at 30% 85%, rgba(241,239,230,.45) 0, transparent 60%),
+      radial-gradient(1px 1px at 92% 60%, rgba(241,239,230,.3) 0, transparent 60%),
+      radial-gradient(1.5px 1.5px at 45% 35%, rgba(241,239,230,.3) 0, transparent 60%),
+      radial-gradient(1px 1px at 15% 55%, rgba(241,239,230,.4) 0, transparent 60%),
+      radial-gradient(1px 1px at 70% 92%, rgba(241,239,230,.35) 0, transparent 60%);
+    background-size: 100% 100%;
+    pointer-events:none;
+    z-index:0;
+    opacity:.7;
+  }
+
+  a{ color:inherit; text-decoration:none; }
+  ul{ list-style:none; }
+  code{ font-family:var(--mono); }
+
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding-left:var(--pad); padding-right:var(--pad); position:relative; z-index:1; }
+  .mono{ font-family:var(--mono); }
+
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:.72rem;
+    letter-spacing:.24em;
+    text-transform:uppercase;
+    color:var(--amber);
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:7px; height:7px;
+    background:var(--amber);
+    border-radius:50%;
+    box-shadow:0 0 8px var(--amber);
+    flex:none;
+  }
+
+  h1,h2,h3{ font-family:var(--display); font-weight:600; letter-spacing:-.01em; line-height:1.05; }
+  section{ position:relative; padding:110px 0; border-bottom:1px solid var(--line-soft); }
+  section:last-of-type{ border-bottom:none; }
+
+  .crosshairs{ position:absolute; inset:24px; pointer-events:none; z-index:0; opacity:.5; }
+  .crosshairs span{ position:absolute; width:14px; height:14px; }
+  .crosshairs span::before, .crosshairs span::after{ content:""; position:absolute; background:var(--ink-faint); }
+  .crosshairs span::before{ width:100%; height:1px; top:50%; }
+  .crosshairs span::after{ height:100%; width:1px; left:50%; }
+  .crosshairs .tl{ top:0; left:0; }
+  .crosshairs .tr{ top:0; right:0; }
+  .crosshairs .bl{ bottom:0; left:0; }
+  .crosshairs .br{ bottom:0; right:0; }
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(6,6,5,.78);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .nav-inner{
+    max-width:var(--maxw); margin:0 auto; padding:16px var(--pad);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .logo{ font-family:var(--display); font-weight:700; font-size:1.05rem; letter-spacing:.02em; display:flex; align-items:center; gap:8px;}
+  .logo .pipe{ color:var(--amber); font-weight:400; }
+  .logo .sub{ font-family:var(--mono); font-weight:400; font-size:.68rem; color:var(--ink-dim); letter-spacing:.15em; }
+
+  nav.links{ display:flex; gap:2px; align-items:center; flex-wrap:wrap; }
+  nav.links a{
+    font-family:var(--mono); font-size:.7rem; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--ink-dim); padding:9px 14px; border-radius:2px; transition:color .2s, background .2s;
+  }
+  nav.links a:hover, nav.links a.active{ color:var(--ink); background:var(--bg-panel-hi); }
+  nav.links a.active{ color:var(--amber); }
+
+  .version{ font-family:var(--mono); font-size:.68rem; color:var(--green); display:flex; gap:8px; align-items:center; letter-spacing:.08em; }
+  .version .dot{ width:6px; height:6px; border-radius:50%; background:var(--green); box-shadow:0 0 6px var(--green); }
+
+  @media (max-width:820px){ nav.links{ display:none; } }
+
+  /* ---------- HERO ---------- */
+  .hero{ min-height:70vh; display:flex; align-items:center; padding-top:140px; }
+  .hero h1{ font-size:clamp(2.6rem, 7vw, 5.6rem); font-weight:700; display:flex; flex-wrap:wrap; align-items:baseline; gap:.25em; }
+  .hero h1 .accent{ color:var(--amber); font-weight:400; font-size:.42em; letter-spacing:.05em; }
+  .hero p.lead{ font-size:clamp(1rem,2vw,1.25rem); color:var(--ink-dim); max-width:600px; margin-top:22px; line-height:1.55; }
+  .telemetry{
+    margin-top:30px; display:flex; gap:28px; flex-wrap:wrap;
+    font-family:var(--mono); font-size:.72rem; color:var(--ink-faint); letter-spacing:.08em;
+  }
+  .telemetry b{ color:var(--ink-dim); font-weight:400; }
+
+  /* ---------- SECTION HEAD ---------- */
+  .sec-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:40px; margin-bottom:56px; flex-wrap:wrap; }
+  .sec-head h2{ font-size:clamp(1.9rem,4vw,3rem); max-width:640px; }
+  .sec-head .note{ font-family:var(--mono); font-size:.76rem; color:var(--ink-dim); max-width:300px; line-height:1.6; }
+  .sec-head .code{ font-family:var(--mono); font-size:.7rem; color:var(--amber); letter-spacing:.15em; }
+
+  /* ---------- PRINCÍPIOS ---------- */
+  .principles{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); }
+  @media (max-width:900px){ .principles{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:560px){ .principles{ grid-template-columns:1fr; } }
+  .principle{ background:var(--bg); padding:30px 26px; }
+  .principle .code{ font-family:var(--mono); font-size:.68rem; color:var(--amber); letter-spacing:.12em; margin-bottom:16px; display:block; }
+  .principle h3{ font-size:1.15rem; font-weight:500; margin-bottom:10px; }
+  .principle p{ color:var(--ink-dim); font-size:.9rem; line-height:1.6; }
+
+  /* ---------- CORES ---------- */
+  .color-groups{ display:grid; grid-template-columns:1fr 1fr; gap:40px 56px; }
+  @media (max-width:900px){ .color-groups{ grid-template-columns:1fr; } }
+  .color-group h3{ font-size:1.05rem; font-weight:500; margin-bottom:6px; }
+  .color-group > p{ font-family:var(--mono); font-size:.68rem; color:var(--ink-faint); letter-spacing:.08em; margin-bottom:18px; text-transform:uppercase; }
+  .swatches{ display:flex; flex-direction:column; gap:8px; }
+  .swatch{
+    display:flex; align-items:center; gap:18px;
+    border:1px solid var(--line-soft); background:var(--bg-panel); padding:12px 14px;
+    cursor:pointer; transition:border-color .2s;
+  }
+  .swatch:hover{ border-color:var(--amber-dim); }
+  .swatch-chip{ width:56px; height:44px; flex:none; border:1px solid var(--line); }
+  .swatch-info{ flex:1; min-width:0; }
+  .swatch-info .name{ font-family:var(--mono); font-size:.72rem; color:var(--ink); letter-spacing:.04em; }
+  .swatch-info .var{ font-family:var(--mono); font-size:.62rem; color:var(--ink-faint); margin-top:3px; }
+  .swatch-hex{ font-family:var(--mono); font-size:.7rem; color:var(--ink-dim); letter-spacing:.08em; }
+  .swatch.copied .swatch-hex{ color:var(--green); }
+
+  /* ---------- TIPOGRAFIA ---------- */
+  .type-specimens{ display:grid; grid-template-columns:1fr 1fr; gap:40px 56px; }
+  @media (max-width:900px){ .type-specimens{ grid-template-columns:1fr; } }
+  .spec{ border-top:1px solid var(--line); padding:22px 0; }
+  .spec .meta{ font-family:var(--mono); font-size:.66rem; color:var(--ink-faint); letter-spacing:.1em; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; text-transform:uppercase; }
+  .spec .sample{ margin-top:12px; color:var(--ink); }
+  .font-card{ border:1px solid var(--line); background:var(--bg-panel); padding:30px; }
+  .font-card .fname{ font-size:2.4rem; margin-bottom:8px; }
+  .font-card .fmeta{ font-family:var(--mono); font-size:.7rem; color:var(--ink-dim); letter-spacing:.08em; }
+  .font-card .falphabet{ font-size:1.5rem; color:var(--ink-dim); margin-top:14px; }
+  .font-card.grotesk{ font-family:var(--display); }
+  .font-card.mono{ font-family:var(--mono); }
+  .type-rules{ margin-top:44px; border:1px solid var(--line); }
+  .type-rules .row{ display:flex; gap:20px; padding:16px 20px; border-bottom:1px solid var(--line-soft); align-items:baseline; }
+  .type-rules .row:last-child{ border-bottom:none; }
+  .type-rules .tag{ font-family:var(--mono); font-size:.66rem; color:var(--amber); letter-spacing:.1em; text-transform:uppercase; flex:none; width:130px; }
+  .type-rules .val{ font-family:var(--mono); font-size:.78rem; color:var(--ink-dim); }
+  .type-rules .rule{ font-size:.9rem; color:var(--ink-dim); }
+
+  /* ---------- ESPAÇAMENTO ---------- */
+  .layout-grid{ display:grid; grid-template-columns:1fr 1fr; gap:40px 56px; }
+  @media (max-width:900px){ .layout-grid{ grid-template-columns:1fr; } }
+  .spacer-line{ display:flex; align-items:center; gap:14px; margin-bottom:14px; }
+  .spacer-line .bar{ height:20px; background:var(--amber); opacity:.9; flex:none; }
+  .spacer-line .lbl{ font-family:var(--mono); font-size:.68rem; color:var(--ink-dim); letter-spacing:.08em; }
+  .radius-row{ display:flex; gap:30px; align-items:flex-end; flex-wrap:wrap; }
+  .radius-item{ text-align:center; }
+  .radius-box{ border:1px solid var(--amber); background:var(--amber-wash); }
+  .radius-item .lbl{ font-family:var(--mono); font-size:.66rem; color:var(--ink-faint); margin-top:8px; display:block; }
+
+  /* ---------- COMPONENTES ---------- */
+  .btn{
+    font-family:var(--mono); font-size:.74rem; letter-spacing:.1em; text-transform:uppercase;
+    padding:15px 28px; border:1px solid var(--line); background:transparent; color:var(--ink);
+    cursor:pointer; transition:border-color .2s, color .2s, background .2s;
+    display:inline-flex; align-items:center; gap:10px;
+  }
+  .btn:hover{ border-color:var(--amber); color:var(--amber); }
+  .btn.primary{ background:var(--amber); color:#0a0a09; border-color:var(--amber); font-weight:700; }
+  .btn.primary:hover{ background:transparent; color:var(--amber); }
+  .btn.small{ padding:8px 14px; font-size:.64rem; }
+
+  .comp-demo{ display:flex; gap:14px; flex-wrap:wrap; align-items:center; }
+  .comp-row{ display:flex; gap:36px; flex-wrap:wrap; align-items:center; }
+  .comp-label{ font-family:var(--mono); font-size:.66rem; color:var(--ink-faint); letter-spacing:.15em; text-transform:uppercase; margin-bottom:14px; display:block; }
+
+  .badge{ min-width:20px; height:20px; padding:0 5px; border-radius:50%; border:1px solid var(--ink-faint); display:inline-flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:.66rem; color:var(--ink-dim); }
+  .badge.filled{ background:var(--amber); color:#0a0a09; border-color:var(--amber); font-weight:700; }
+
+  .tag-chip{ font-family:var(--mono); font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; background:transparent; border:1px solid var(--line); color:var(--ink-dim); padding:10px 18px; cursor:pointer; transition:all .2s; }
+  .tag-chip:hover{ color:var(--ink); border-color:var(--ink-dim); }
+  .tag-chip.active{ background:var(--amber); color:#0a0a09; border-color:var(--amber); font-weight:700; }
+
+  .meta-list{ border-top:1px solid var(--line); max-width:420px; }
+  .meta-list div{ display:flex; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--line); font-family:var(--mono); font-size:.78rem; letter-spacing:.05em; }
+  .meta-list div span:first-child{ color:var(--ink-faint); text-transform:uppercase; letter-spacing:.15em; font-size:.68rem; }
+  .meta-list div span:last-child{ color:var(--ink); text-align:right; }
+
+  /* ---------- FORMULÁRIOS ---------- */
+  .form-demo{ display:grid; grid-template-columns:1fr 1fr; gap:30px; }
+  @media (max-width:760px){ .form-demo{ grid-template-columns:1fr; } }
+  .field{ display:flex; flex-direction:column; gap:8px; }
+  .field label{ font-family:var(--mono); font-size:.68rem; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-faint); }
+  .field input, .field select, .field textarea{
+    background:var(--bg-panel); border:1px solid var(--line); color:var(--ink); font-family:var(--display);
+    font-size:1rem; padding:14px 16px; outline:none; transition:border-color .2s; resize:vertical;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{ border-color:var(--amber); }
+  .field select{ appearance:none; -webkit-appearance:none; background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="%23918f84" fill="none" stroke-width="1"/></svg>'); background-repeat:no-repeat; background-position:right 16px center; }
+  .form-msg{ font-family:var(--mono); font-size:.76rem; color:var(--green); min-height:18px; letter-spacing:.05em; }
+
+  /* ---------- CARDS ---------- */
+  .cards-demo{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  @media (max-width:900px){ .cards-demo{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:600px){ .cards-demo{ grid-template-columns:1fr; } }
+  .proj-card{ background:var(--bg-panel); border:1px solid var(--line-soft); overflow:hidden; cursor:pointer; }
+  .proj-art{ aspect-ratio:4/3; position:relative; overflow:hidden; display:flex; align-items:flex-end; padding:18px; transition:transform .5s ease; }
+  .proj-card:hover .proj-art{ transform:scale(1.03); }
+  .proj-art::before{
+    content:""; position:absolute; left:0; right:0; top:-6%; height:1px; z-index:2; opacity:0;
+    background:linear-gradient(90deg, transparent, var(--amber) 20%, var(--amber) 80%, transparent);
+    box-shadow:0 0 8px var(--amber-wash); pointer-events:none;
+  }
+  .proj-card:hover .proj-art::before{ animation:scanline 1.1s ease-in-out; }
+  .proj-art .code{ font-family:var(--mono); font-size:.68rem; color:rgba(241,239,230,.75); letter-spacing:.1em; }
+  .proj-body{ padding:18px 18px 22px; border-top:1px solid var(--line-soft); }
+  .proj-body h3{ font-size:1.05rem; font-weight:500; margin-bottom:8px; }
+  .proj-meta{ font-family:var(--mono); font-size:.66rem; color:var(--ink-faint); letter-spacing:.08em; display:flex; justify-content:space-between; text-transform:uppercase; }
+  .p1{ background: radial-gradient(circle at 30% 20%, #1c1c1a, #0a0a09 65%); }
+
+  /* product card */
+  .product{ display:flex; flex-direction:column; }
+  .product-art{
+    aspect-ratio:1/1.1; border:1px solid var(--line-soft); position:relative; overflow:hidden;
+    display:flex; align-items:center; justify-content:center; margin-bottom:14px;
+  }
+  .product-art::after{
+    content:""; position:absolute; inset:0;
+    background: repeating-linear-gradient(135deg, rgba(200,200,189,.05) 0 2px, transparent 2px 14px);
+  }
+  .product-art .glyph{ font-family:var(--mono); font-size:.66rem; color:var(--ink-faint); letter-spacing:.1em; z-index:1; }
+  .product h4{ font-size:.98rem; font-weight:500; margin-bottom:6px; }
+  .product .tag{ font-family:var(--mono); font-size:.64rem; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.1em; margin-bottom:10px; }
+  .product-row{ display:flex; justify-content:space-between; align-items:center; margin-top:auto; }
+  .price{ font-family:var(--mono); color:var(--amber); font-size:.9rem; }
+
+  /* stage item */
+  .stage-list{ border-left:1px dashed var(--line); margin-left:8px; max-width:620px; }
+  .stage{ position:relative; padding:26px 0 26px 40px; border-bottom:1px solid var(--line-soft); }
+  .stage:last-child{ border-bottom:none; }
+  .stage::before{
+    content:""; position:absolute; left:-6px; top:34px; width:11px; height:11px; border-radius:50%;
+    background:var(--bg); border:1px solid var(--amber); box-shadow:0 0 0 4px var(--bg);
+  }
+  .stage .code{ font-family:var(--mono); font-size:.74rem; color:var(--amber); letter-spacing:.1em; }
+  .stage .code small{ display:block; color:var(--ink-faint); margin-top:4px; font-size:.64rem; letter-spacing:.15em; }
+  .stage h3{ font-size:1.25rem; font-weight:500; margin:8px 0; }
+  .stage p{ color:var(--ink-dim); font-size:.92rem; line-height:1.6; }
+
+  /* ---------- ASSINATURAS ---------- */
+  .device-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); }
+  @media (max-width:760px){ .device-grid{ grid-template-columns:1fr; } }
+  .device{ background:var(--bg); padding:34px 30px; position:relative; }
+  .device h3{ font-size:1.05rem; font-weight:500; margin-bottom:6px; }
+  .device .desc{ font-size:.85rem; color:var(--ink-dim); line-height:1.6; }
+  .device .spec{ font-family:var(--mono); font-size:.66rem; color:var(--ink-faint); letter-spacing:.08em; margin-top:12px; display:block; text-transform:uppercase; }
+
+  .demo-crosshair{ position:relative; height:90px; border:1px solid var(--line-soft); }
+  .demo-crosshair .crosshairs{ inset:0; opacity:1; }
+  .demo-crosshair .crosshairs span::before, .demo-crosshair .crosshairs span::after{ background:var(--amber); }
+
+  .demo-orbit{ height:130px; display:flex; align-items:center; justify-content:center; }
+  .orbit-svg{ width:130px; height:130px; overflow:visible; }
+  .orbit-svg .r1{ animation: spin 40s linear infinite; transform-origin:65px 65px; }
+  .orbit-svg .r2{ animation: spin 60s linear infinite reverse; transform-origin:65px 65px; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  .demo-scanline{ position:relative; height:64px; border:1px solid var(--line-soft); overflow:hidden; }
+  .demo-scanline .scan{
+    content:""; position:absolute; left:0; right:0; top:-6%; height:1px;
+    background:linear-gradient(90deg, transparent, var(--amber) 20%, var(--amber) 80%, transparent);
+    box-shadow:0 0 8px var(--amber-wash);
+    animation:scanline 2.2s ease-in-out infinite;
+  }
+  @keyframes scanline{
+    0%{ top:-6%; opacity:0; }
+    12%{ opacity:1; }
+    88%{ opacity:1; }
+    100%{ top:104%; opacity:0; }
+  }
+
+  .demo-dot{ display:flex; align-items:center; justify-content:center; height:64px; gap:24px; }
+  .dot-live{ width:8px; height:8px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green); animation:blink 1.1s ease-in-out infinite; }
+  @keyframes blink{ 0%,100%{ opacity:1; } 50%{ opacity:.25; } }
+
+  .demo-grid-bg{
+    height:70px; border:1px solid var(--line-soft); position:relative;
+    background-image: linear-gradient(var(--line-soft) 1px, transparent 1px), linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size:20px 20px;
+  }
+
+  .grain-badge{ display:inline-flex; align-items:center; gap:10px; font-family:var(--mono); font-size:.68rem; color:var(--ink-dim); border:1px solid var(--line); padding:10px 14px; }
+
+  /* ---------- MOTION ---------- */
+  .motion-table{ width:100%; border-collapse:collapse; font-family:var(--mono); font-size:.78rem; }
+  .motion-table th{ text-align:left; color:var(--ink-faint); font-weight:400; font-size:.64rem; letter-spacing:.15em; text-transform:uppercase; padding:12px 14px; border-bottom:1px solid var(--line); }
+  .motion-table td{ padding:13px 14px; border-bottom:1px solid var(--line-soft); color:var(--ink-dim); }
+  .motion-table td:first-child{ color:var(--ink); }
+  .motion-table code{ color:var(--amber); }
+
+  /* ---------- CÓDIGO ---------- */
+  pre.code-block{
+    background:var(--bg-panel); border:1px solid var(--line); padding:26px 28px;
+    font-family:var(--mono); font-size:.78rem; line-height:1.8; color:var(--ink-dim);
+    overflow-x:auto;
+  }
+  pre.code-block .k{ color:var(--amber); }
+  pre.code-block .c{ color:var(--ink-faint); }
+  pre.code-block .v{ color:var(--ink); }
+
+  /* ---------- FOOTER ---------- */
+  footer{ padding:52px 0 40px; }
+  .footer-inner{ display:flex; justify-content:space-between; align-items:flex-end; gap:30px; flex-wrap:wrap; }
+  .footer-left{ font-family:var(--mono); font-size:.7rem; color:var(--ink-faint); letter-spacing:.05em; line-height:1.8; }
+  .footer-left b{ color:var(--ink-dim); font-weight:400; }
+  .footer-right{ font-family:var(--mono); font-size:.66rem; color:var(--ink-faint); letter-spacing:.12em; text-transform:uppercase; }
+
+  .reveal{ opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="crosshairs" style="position:fixed; inset:0; opacity:.35;"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#topo" class="logo">AZTRO <span class="pipe">|</span> <span class="sub">DESIGN SYSTEM</span></a>
+    <nav class="links">
+      <a href="#principios" data-sec="principios">Princípios</a>
+      <a href="#cores" data-sec="cores">Cores</a>
+      <a href="#tipografia" data-sec="tipografia">Tipografia</a>
+      <a href="#espacamento" data-sec="espacamento">Espaçamento</a>
+      <a href="#componentes" data-sec="componentes">Componentes</a>
+      <a href="#formularios" data-sec="formularios">Formulários</a>
+      <a href="#cards" data-sec="cards">Cards</a>
+      <a href="#assinaturas" data-sec="assinaturas">Assinaturas</a>
+      <a href="#motion" data-sec="motion">Motion</a>
+    </nav>
+    <div class="version"><span class="dot"></span> v1.0</div>
+  </div>
+</header>
+
+<main id="topo">
+
+  <!-- INTRO -->
+  <section class="hero" style="border-bottom:1px solid var(--line-soft);">
+    <div class="wrap">
+      <div class="eyebrow">DOCUMENTAÇÃO — BASE DE LANÇAMENTO</div>
+      <h1>Design System <span class="accent">| AZTRO</span></h1>
+      <p class="lead">Tokens, componentes e assinaturas visuais do estúdio criativo. Tudo que um projeto AZTRO precisa para decolar: cores, tipos, espaçamentos, padrões e movimento — calculados com a precisão de uma sala de controle.</p>
+      <div class="telemetry">
+        <div><b>TOKENS</b> · 32</div>
+        <div><b>COMPONENTES</b> · 14</div>
+        <div><b>FONTES</b> · 2</div>
+        <div><b>STATUS</b> · SISTEMAS ATIVOS</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRINCÍPIOS -->
+  <section id="principios">
+    <div class="crosshairs"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
+    <div class="wrap reveal">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow">Princípios</div>
+          <h2>Quatro leis do sistema.</h2>
+        </div>
+        <span class="code">SYS-01 / DIRETRIZES</span>
+      </div>
+      <div class="principles">
+        <div class="principle">
+          <span class="code">01 / MISSÃO</span>
+          <h3>Objetivo antes de estética</h3>
+          <p>Cada decisão serve a uma trajetória clara. Nada decora sem função — tudo empurra o resultado para frente.</p>
+        </div>
+        <div class="principle">
+          <span class="code">02 / PRECISÃO</span>
+          <h3>Grid e medida</h3>
+          <p>Escala tipográfica, espaçamento e raios são tokens, não valores soltos. Ritmo calculado, sem improviso.</p>
+        </div>
+        <div class="principle">
+          <span class="code">03 / CONTRASTE</span>
+          <h3>Preto, grafite, âmbar</h3>
+          <p>Superfície escura, tipografia quente, accent âmbar. Sinal forte sobre ruído zero. Verde reservado a status.</p>
+        </div>
+        <div class="principle">
+          <span class="code">04 / MOVIMENTO</span>
+          <h3>Movimento comunica</h3>
+          <p>Animações funcionais que sinalizam estado: scanline no hover, órbita lenta, blink no status. Nada gratuito.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORES -->
+  <section id="cores">
+    <div class="crosshairs"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
+    <div class="wrap reveal">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow">Cores</div>
+          <h2>Paleta da sala de controle.</h2>
+        </div>
+        <p class="note">Toque em um swatch para copiar o HEX.</p>
+      </div>
+
+      <div class="color-groups">
+        <div class="color-group">
+          <h3>Fundo & Superfície</h3>
+          <p>--bg · --bg-panel · --bg-panel-hi</p>
+          <div class="swatches">
+            <div class="swatch" data-hex="#060605">
+              <span class="swatch-chip" style="background:#060605;"></span>
+              <div class="swatch-info"><div class="name">BG</div><div class="var">--bg</div></div>
+              <span class="swatch-hex">#060605</span>
+            </div>
+            <div class="swatch" data-hex="#0e0e0d">
+              <span class="swatch-chip" style="background:#0e0e0d; border-color:#2a2a27;"></span>
+              <div class="swatch-info"><div class="name">BG PANEL</div><div class="var">--bg-panel</div></div>
+              <span class="swatch-hex">#0e0e0d</span>
+            </div>
+            <div class="swatch" data-hex="#151513">
+              <span class="swatch-chip" style="background:#151513; border-color:#2a2a27;"></span>
+              <div class="swatch-info"><div class="name">BG PANEL HI</div><div class="var">--bg-panel-hi</div></div>
+              <span class="swatch-hex">#151513</span>
+            </div>
+          </div>
+          <p style="margin-top:14px; font-size:.86rem; color:var(--ink-dim); line-height:1.6;">Fundo da página, painéis/inputs e camada de hover. Sempre nesta ordem — superfícies nunca sobem mais que um degrau.</p>
+        </div>
+
+        <div class="color-group">
+          <h3>Borda & Linha</h3>
+          <p>--line · --line-soft</p>
+          <div class="swatches">
+            <div class="swatch" data-hex="#2a2a27">
+              <span class="swatch-chip" style="background:#2a2a27;"></span>
+              <div class="swatch-info"><div class="name">LINE</div><div class="var">--line</div></div>
+              <span class="swatch-hex">#2a2a27</span>
+            </div>
+            <div class="swatch" data-hex="#1b1b19">
+              <span class="swatch-chip" style="background:#1b1b19; border-color:#2a2a27;"></span>
+              <div class="swatch-info"><div class="name">LINE SOFT</div><div class="var">--line-soft</div></div>
+              <span class="swatch-hex">#1b1b19</span>
+            </div>
+          </div>
+          <p style="margin-top:14px; font-size:.86rem; color:var(--ink-dim); line-height:1.6;">Bordas de componentes e separadores. Soft para divisões estruturais; line para controles e inputs.</p>
+        </div>
+
+        <div class="color-group">
+          <h3>Texto</h3>
+          <p>--ink · --ink-dim · --ink-faint</p>
+          <div class="swatches">
+            <div class="swatch" data-hex="#f1efe6">
+              <span class="swatch-chip" style="background:#f1efe6;"></span>
+              <div class="swatch-info"><div class="name">INK</div><div class="var">--ink</div></div>
+              <span class="swatch-hex">#f1efe6</span>
+            </div>
+            <div class="swatch" data-hex="#918f84">
+              <span class="swatch-chip" style="background:#918f84;"></span>
+              <div class="swatch-info"><div class="name">INK DIM</div><div class="var">--ink-dim</div></div>
+              <span class="swatch-hex">#918f84</span>
+            </div>
+            <div class="swatch" data-hex="#4c4a44">
+              <span class="swatch-chip" style="background:#4c4a44;"></span>
+              <div class="swatch-info"><div class="name">INK FAINT</div><div class="var">--ink-faint</div></div>
+              <span class="swatch-hex">#4c4a44</span>
+            </div>
+          </div>
+          <p style="margin-top:14px; font-size:.86rem; color:var(--ink-dim); line-height:1.6;">Três degraus de hierarquia: conteúdo, apoio, e metadados/labels. Texto desabilitado usa faint.</p>
+        </div>
+
+        <div class="color-group">
+          <h3>Accent & Status</h3>
+          <p>--amber · --amber-dim · --amber-wash · --green</p>
+          <div class="swatches">
+            <div class="swatch" data-hex="#c8c8bd">
+              <span class="swatch-chip" style="background:#c8c8bd;"></span>
+              <div class="swatch-info"><div class="name">AMBER</div><div class="var">--amber</div></div>
+              <span class="swatch-hex">#c8c8bd</span>
+            </div>
+            <div class="swatch" data-hex="#38372f">
+              <span class="swatch-chip" style="background:#38372f; border-color:#2a2a27;"></span>
+              <div class="swatch-info"><div class="name">AMBER DIM</div><div class="var">--amber-dim</div></div>
+              <span class="swatch-hex">#38372f</span>
+            </div>
+            <div class="swatch" data-hex="rgba(200,200,189,.06)">
+              <span class="swatch-chip" style="background:rgba(200,200,189,.06); border-color:#2a2a27;"></span>
+              <div class="swatch-info"><div class="name">AMBER WASH</div><div class="var">--amber-wash</div></div>
+              <span class="swatch-hex">rgba .06</span>
+            </div>
+            <div class="swatch" data-hex="#35d48a">
+              <span class="swatch-chip" style="background:#35d48a;"></span>
+              <div class="swatch-info"><div class="name">GREEN</div><div class="var">--green</div></div>
+              <span class="swatch-hex">#35d48a</span>
+            </div>
+          </div>
+          <p style="margin-top:14px; font-size:.86rem; color:var(--ink-dim); line-height:1.6;">Âmbar = accent único de ação e destaque. Verde = status exclusivo: online, sucesso, adicionado.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIPOGRAFIA -->
+  <section id="tipografia">
+    <div class="crosshairs"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
+    <div class="wrap reveal">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow">Tipografia</div>
+          <h2>Duas fontes, um idioma.</h2>
+        </div>
+        <span class="code">SYS-03 / ESCALA</span>
+      </div>
+
+      <div class="font-card grotesk" style="margin-bottom:32px;">
+        <div class="fname">Space Grotesk</div>
+        <div class="fmeta">DISPLAY · 300–700 · TÍTULOS, NÚMEROS, CORPO</div>
+        <div class="falphabet">AaBbCc 0123456789 — Missão, órbita, trajetória</div>
+      </div>
+
+      <div class="type-specimens">
+        <div class="spec">
+          <div class="meta"><span>Display XL — H1 hero</span><span>clamp(3.4rem, 10vw, 8.2rem) / 700 / -0.01em</span></div>
+          <div class="sample" style="font-size:clamp(2.6rem,7vw,5.2rem); font-weight:700;">AZTRO</div>
+        </div>
+        <div class="spec">
+          <div class="meta"><span>Display L — H2 seção</span><span>clamp(2rem, 4.4vw, 3.4rem) / 600 / -0.01em</span></div>
+          <div class="sample" style="font-size:clamp(1.6rem,3.4vw,2.6rem); font-weight:600;">Todo projeto segue a mesma sequência.</div>
+        </div>
+        <div class="spec">
+          <div class="meta"><span>Display M — H3</span><span>1.5rem / 500 / line-height 1.05</span></div>
+          <div class="sample" style="font-size:1.3rem; font-weight:500;">Estratégia & Identidade de Marca</div>
+        </div>
+        <div class="spec">
+          <div class="meta"><span>Display S — card</span><span>1.15rem / 500</span></div>
+          <div class="sample" style="font-size:1.05rem; font-weight:500;">Constelação</div>
+        </div>
+        <div class="spec">
+          <div class="meta"><span>Lead — intro</span><span>clamp(1.05rem, 2vw, 1.35rem) / 400 / 1.55</span></div>
+          <div class="sample" style="font-size:1.05rem; color:var(--ink-dim);">Marca, produto e movimento, desenhados com a precisão de uma sala de controle.</div>
+        </div>
+        <div class="spec">
+          <div class="meta"><span>Body</span><span>0.9–1.05rem / 400 / 1.6</span></div>
+          <div class="sample" style="font-size:.95rem; color:var(--ink-dim);">Trabalhamos como uma tripulação pequena e multidisciplinar — cada projeto é uma missão com objetivo claro.</div>
+        </div>
+      </div>
+
+      <div class="font-card mono" style="margin-top:40px;">
+        <div class="fname">Space Mono</div>
+        <div class="fmeta">MONO · 400/700 · LABELS, DADOS, CÓDIGO, TELEMETRIA</div>
+        <div class="falphabet">AaBbCc 0123456789 — STATUS · ÓRBITA · T+ 00:00:00</div>
+      </div>
+
+      <div class="type-rules" style="margin-top:32px;">
+        <div class="row"><span class="tag">Eyebrow</span><span class="val">mono .72rem · ls .24em · UPPER</span><span class="rule">Rótulo de seção com ponto âmbar à esquerda.</span></div>
+        <div class="row"><span class="tag">Label mono</span><span class="val">mono .66–.78rem · ls .08–.15em · UPPER</span><span class="rule">Tudo que é metadado: nav, tags, preços, códigos.</span></div>
+        <div class="row"><span class="tag">Regra 1</span><span class="val">—</span><span class="rule">Maiúsculas + letterspacing somente em mono. Nunca no Grotesk.</span></div>
+        <div class="row"><span class="tag">Regra 2</span><span class="val">—</span><span class="rule">Mono nunca em parágrafo longo — leitura é do Grotesk.</span></div>
+        <div class="row"><span class="tag">Regra 3</span><span class="val">—</span><span class="rule">Títulos com tracking negativo -.01em. Line-height 1.05.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESPAÇAMENTO -->
+  <section id="espacamento">
+    <div class="crosshairs"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
+    <div class="wrap reveal">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow">Espaçamento & Grid</div>
+          <h2>Ritmo calculado em tokens.</h2>
+        </div>
+        <span class="code">SYS-04 / LAYOUT</span>
+      </div>
+
+      <div class="layout-grid">
+        <div>
+          <div class="comp-label">Escala de espaçamento</div>
+          <div class="spacer-line"><span class="bar" style="width:4px;"></span><span class="lbl">4px — gap de ícone</span></div>
+          <div class="spacer-line"><span class="bar" style="width:8px;"></span><span class="lbl">8px — gap de label / dot</span></div>
+          <div class="spacer-line"><span class="bar" style="width:14px;"></span><span class="lbl">14px — gap de botão</span></div>
+          <div class="spacer-line"><span class="bar" style="width:24px;"></span><span class="lbl">24px — gap de card / seção interna</span></div>
+          <div class="spacer-line"><span class="bar" style="width:40px;"></span><span class="lbl">40px — bloco de filtros / grid</span></div>
+          <div class="spacer-line"><span class="bar" style="width:64px;"></span><span class="lbl">64px — head de seção</span></div>
+          <div class="spacer-line"><span class="bar" style="width:120px;"></span><span class="lbl">120px — padding vertical de seção</span></div>
+        </div>
+        <div>
+          <div class="comp-label">Container & raio</div>
+          <div style="font-family:var(--mono); font-size:.8rem; color:var(--ink-dim); line-height:1.9; margin-bottom:22px;">
+            --maxw · 1320px<br>
+            --pad · clamp(20px, 5vw, 64px)<br>
+            section padding · 120px 0<br>
+            grids · 3 col → 2 col → 1 col<br>
+            &nbsp;&nbsp;breakpoints: 900px · 600px
+          </div>
+          <div class="radius-row">
+            <div class="radius-item">
+              <div class="radius-box" style="width:80px; height:44px; border-radius:0;"></div>
+              <span class="lbl">0 · inputs/forms</span>
+            </div>
+            <div class="radius-item">
+              <div class="radius-box" style="width:80px; height:44px; border-radius:2px;"></div>
+              <span class="lbl">2px · botões/chips</span>
+            </div>
+            <div class="radius-item">
+              <div class="radius-box" style="width:44px; height:44px; border-radius:50%;"></div>
+              <span class="lbl">50% · dots/badges</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPONENTES -->
+  <section id="componentes">
+    <div class="crosshairs"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
+    <div class="wrap reveal">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow">Componentes</div>
+          <h2>Blocos de construção.</h2>
+        </div>
+        <span class="code">SYS-05 / UI</span>
+      </div>
+
+      <div style="margin-bottom:52px;">
+        <div class="comp-label">Botões — mono .74rem · ls .1em · UPPER · 15px 28px</div>
+        <div class="comp-demo">
+          <button class="btn primary">Iniciar missão</button>
+          <button class="btn">Ver projetos</button>
+          <button class="btn small">Adicionar</button>
+          <span class="badge filled">3</span>
+        </div>
+      </div>
+
+      <div style="margin-bottom:52px;">
+        <div class="comp-label">Eyebrow + chips de filtro — dot 7px · active = âmbar invertido</div>
+        <div class="eyebrow">Our Core Actuation</div>
+        <div class="comp-row">
+          <button class="tag-chip active">Todos</button>
+          <button class="tag-chip">Prints</button>
+          <button class="tag-chip">Vestuário</button>
+          <button class="tag-chip">Objetos</button>
+        </div>
+      </div>
+
+      <div class="layout-grid">
+        <div>
+          <div class="comp-label">Meta list — linhas com borda superior</div>
+          <div class="meta-list mono">
+            <div><span>Fundação</span><span>2019</span></div>
+            <div><span>Base</span><span>Goiânia, Brasil</span></div>
+            <div><span>Atuação</span><span>Marca / Digital / Motion</span></div>
+            <div><span>Modo</span><span>Equipe remota</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="comp-label">Especificação do botão</div>
+          <pre class="code-block"><span class="c">/* primário */</span>
+<span class="k">.btn</span>{
+  font: <span class="v">var(--mono)</span> <span class="v">.74rem</span>; ls: <span class="v">.1em</span>; upper;
+  padding: <span class="v">15px 28px</span>;
+  bg: <span class="v">--amber</span>; color: <span class="v">#0a0a09</span>;
+}
+<span class="c">/* ghost */</span>
+<span class="k">.btn</span>{
+  border: <span class="v">1px --line</span>;
+  hover → border+color <span class="v">--amber</span>;
+}
+<span class="c">/* small (.add-btn) */</span>
+<span class="k">.btn.small</span>{ padding: <span class="v">8px 14px</span>; <span class="v">.64rem</span>; }
+.added{ border-color+color: <span class="v">--green</span>; }</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMULÁRIOS -->
+  <section id="formularios">
+    <div class="crosshairs"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
+    <div class="wrap reveal">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow">Formulários</div>
+          <h2>Inputs de solo.</h2>
+        </div>
+        <span class="code">SYS-06 / FORMS</span>
+      </div>
+
+      <div class="form-demo">
+        <div>
+          <div class="field">
+            <label for="d1">Nome</label>
+            <input id="d1" type="text" placeholder="Seu nome">
+          </div>
+          <div class="field" style="margin-top:22px;">
+            <label for="d2">Tipo de projeto</label>
+            <select id="d2">
+              <option>Identidade de Marca</option>
+              <option>Produto Digital</option>
+              <option>Motion & Filme</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <div class="field">
+            <label for="d3">Mensagem</label>
+            <textarea id="d3" rows="4" placeholder="Descreva a missão..."></textarea>
+          </div>
+          <div class="form-msg" style="margin-top:14px;">Transmissão recebida. Retornaremos em até 2 dias úteis.</div>
+        </div>
+      </div>
+
+      <pre class="code-block" style="margin-top:36px;"><span class="c">/* input padrão */</span>
+<span class="k">.field input</span>{
+  bg: <span class="v">--bg-panel</span>; border: <span class="v">1px --line</span>; radius: <span class="v">0</span>;
+  padding: <span class="v">14px 16px</span>; font: <span class="v">var(--display)</span> <span class="v">1rem</span>;
+}
+<span class="k">:focus</span>{ border-color: <span class="v">--amber</span>; }
+<span class="k">label</span>{ mono <span class="v">.68rem</span> · ls <span class="v">.15em</span> · UPPER · <span class="v">--ink-faint</span> }</pre>
+    </div>
+  </section>
+
+  <!-- CARDS -->
+  <section id="cards">
+    <div class="crosshairs"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
+    <div class="wrap reveal">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow">Cards & Padrões</div>
+          <h2>Pedaços prontos para uso.</h2>
+        </div>
+        <span class="code">SYS-07 / PADRÕES</span>
+      </div>
+
+      <div class="comp-label">Project card — art 4/3 · hover: scale + scanline</div>
+      <div class="cards-demo" style="margin-bottom:56px;">
+        <article class="proj-card">
+          <div class="proj-art p1"><span class="code mono">AZT-001</span></div>
+          <div class="proj-body">
+            <h3>Constelação</h3>
+            <div class="proj-meta"><span>Identidade Visual</span><span>2025</span></div>
+          </div>
+        </article>
+        <article class="proj-card" style="border-color:var(--line);">
+          <div class="proj-art p1" style="background: radial-gradient(circle at 70% 70%, #1a1a18, #060605 70%);"><span class="code mono">AZT-002</span></div>
+          <div class="proj-body">
+            <h3>Órbita Studio — App</h3>
+            <div class="proj-meta"><span>Produto Digital</span><span>2025</span></div>
+          </div>
+        </article>
+        <article class="proj-card" style="border-color:var(--line);">
+          <div class="proj-art p1" style="background: radial-gradient(circle at 20% 80%, #202020, #060605 65%);"><span class="code mono">AZT-003</span></div>
+          <div class="proj-body">
+            <h3>Nebulosa Fest</h3>
+            <div class="proj-meta"><span>Motion & Filme</span><span>2024</span></div>
+          </div>
+        </article>
+      </div>
+
+      <div class="layout-grid" style="align-items:start;">
+        <div>
+          <div class="comp-label">Product card — art 1/1.1 · textura 135°</div>
+          <div class="product" style="max-width:260px;">
+            <div class="product-art"><span class="glyph mono">01 / TRAJETÓRIA</span></div>
+            <h4>Print "Trajetória 01"</h4>
+            <div class="tag">Prints · A3</div>
+            <div class="product-row"><span class="price">R$ 180</span><button class="btn small">Adicionar</button></div>
+          </div>
+        </div>
+        <div>
+          <div class="comp-label">Stage item — timeline tracejada + dot âmbar</div>
+          <div class="stage-list">
+            <div class="stage">
+              <div class="code">STAGE 01<small>IGNIÇÃO</small></div>
+              <h3>Estratégia & Identidade de Marca</h3>
+              <p>Posicionamento, naming, sistemas visuais. A centelha que define a direção antes de qualquer coisa decolar.</p>
+            </div>
+            <div class="stage">
+              <div class="code">STAGE 02<small>EMPUXO</small></div>
+              <h3>Produto Digital & Interfaces</h3>
+              <p>Sites, apps e design systems construídos para performance, não só para bonito.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ASSINATURAS -->
+  <section id="assinaturas">
+    <div class="crosshairs"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
+    <div class="wrap reveal">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow">Assinaturas visuais</div>
+          <h2>O DNA da AZTRO.</h2>
+        </div>
+        <p class="note">Dispositivos que tornam um projeto reconhecível como AZTRO. Use com moderação — menos é mais.</p>
+      </div>
+
+      <div class="device-grid">
+        <div class="device">
+          <h3>Crosshairs de canto</h3>
+          <p class="desc">Moldura de mira nos 4 cantos de cada seção. 14px, cor --ink-faint, opacity .5.</p>
+          <div class="demo-crosshair" style="margin-top:18px;"><div class="crosshairs"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div></div>
+          <span class="spec">.crosshairs · inset 24px · z-index 0</span>
+        </div>
+        <div class="device">
+          <h3>Orbit rings</h3>
+          <p class="desc">Círculos SVG girando a velocidades diferentes — 40s, 60s, 90s. Profundidade em paralaxe no hero.</p>
+          <div class="demo-orbit">
+            <svg class="orbit-svg" viewBox="0 0 130 130">
+              <circle class="r1" cx="65" cy="65" r="58" fill="none" stroke="#2a2a27" stroke-width="1" stroke-dasharray="2 10"/>
+              <circle class="r2" cx="65" cy="65" r="42" fill="none" stroke="#3a3a34" stroke-width="1"/>
+              <circle cx="123" cy="65" r="2.4" fill="#c8c8bd"/>
+            </svg>
+          </div>
+          <span class="spec">.ring1/2/3 · spin linear infinite</span>
+        </div>
+        <div class="device">
+          <h3>Scanline de hover</h3>
+          <p class="desc">Linha âmbar que varre o topo do card no hover. 1.1s ease-in-out, com glow wash.</p>
+          <div class="demo-scanline" style="margin-top:18px;"><span class="scan"></span></div>
+          <span class="spec">::before · linear-gradient amber · keyframes scanline</span>
+        </div>
+        <div class="device">
+          <h3>Starfield</h3>
+          <p class="desc">Campo de estrelas fixo no fundo da página via radial-gradients. Opacity .7, pointer-events none.</p>
+          <div class="demo-grid-bg" style="margin-top:18px; opacity:.5;"></div>
+          <span class="spec">body::before · 8 radial-gradients · opacity .7</span>
+        </div>
+        <div class="device">
+          <h3>Status & telemetria</h3>
+          <p class="desc">Ponto verde pulsante para sistemas online. Dados mono: relógio T+, coordenadas, contadores.</p>
+          <div class="demo-dot"><span class="dot-live"></span><span class="mono" style="font-size:.74rem; color:var(--ink-dim);">SISTEMAS ATIVOS · 16.68°S 49.26°W</span></div>
+          <span class="spec">--green · blink 1.1s ease-in-out infinite</span>
+        </div>
+        <div class="device">
+          <h3>Grain & grid</h3>
+          <p class="desc">Grão SVG (feTurbulence .85, opacity .05) e grid de linhas com máscara radial. Textura sutil sobre a superfície.</p>
+          <div class="demo-grid-bg" style="margin-top:18px;"></div>
+          <span class="spec" style="margin-top:12px;">+ grain · mix-blend-mode overlay · opacity .05</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOTION -->
+  <section id="motion">
+    <div class="crosshairs"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
+    <div class="wrap reveal">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow">Motion</div>
+          <h2>Movimento com propósito.</h2>
+        </div>
+        <span class="code">SYS-08 / DURAÇÕES</span>
+      </div>
+
+      <table class="motion-table">
+        <tr><th>Uso</th><th>Propriedade</th><th>Duração / Easing</th></tr>
+        <tr><td>Hover de controle</td><td>color · border · background</td><td><code>.2s ease</code></td></tr>
+        <tr><td>Reveal on scroll</td><td>opacity · translateY(24px)</td><td><code>.7s ease</code></td></tr>
+        <tr><td>Scanline</td><td>top · opacity</td><td><code>1.1s ease-in-out</code></td></tr>
+        <tr><td>Órbita</td><td>transform rotate</td><td><code>40s / 60s / 90s linear infinite</code></td></tr>
+        <tr><td>Status blink</td><td>opacity</td><td><code>1.1s ease-in-out infinite</code></td></tr>
+        <tr><td>Trail do scroll-cue</td><td>left</td><td><code>2.4s ease-in-out infinite</code></td></tr>
+        <tr><td>Toast / badge</td><td>translateY · transform</td><td><code>.35s cubic-bezier(.2,.8,.2,1)</code></td></tr>
+        <tr><td>Magnetic button</td><td>transform</td><td><code>.08s in · .4s cubic-bezier(.2,.8,.2,1) back</code></td></tr>
+      </table>
+
+      <div style="margin-top:44px; border-top:1px solid var(--line); padding-top:28px;">
+        <div class="comp-label">Regra de ouro</div>
+        <p style="font-size:1.05rem; color:var(--ink-dim); line-height:1.6; max-width:640px;">Todo movimento respeita <code style="color:var(--amber);">prefers-reduced-motion</code>: animações zeradas para <code style="color:var(--amber);">0.001ms</code>. Interações de cursor (reticle, magnetic, parallax) só em dispositivos com ponteiro fino. Animação é sinal de estado, nunca decoração.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div class="footer-left">
+      <b>AZTRO | DESIGN SYSTEM</b><br>
+      v1.0 · Tokens 32 · Componentes 14 · 2026<br>
+      Base de referência para todos os projetos do estúdio.
+    </div>
+    <div class="footer-right">16.6864° S, 49.2643° W — Goiânia, BR</div>
+  </div>
+</footer>
+
+<script>
+  // copy hex on swatch click
+  document.querySelectorAll('.swatch').forEach(s => {
+    s.addEventListener('click', () => {
+      const hex = s.dataset.hex;
+      navigator.clipboard.writeText(hex);
+      s.classList.add('copied');
+      setTimeout(() => s.classList.remove('copied'), 1200);
+    });
+  });
+
+  // active nav link on scroll
+  const sections = document.querySelectorAll('main section[id]');
+  const links = document.querySelectorAll('nav.links a');
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        links.forEach(l => l.classList.toggle('active', l.dataset.sec === entry.target.id));
+      }
+    });
+  }, { rootMargin: '-40% 0px -40% 0px' });
+  sections.forEach(s => navObserver.observe(s));
+
+  // reveal on scroll
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){ entry.target.classList.add('in'); revealObserver.unobserve(entry.target); }
+    });
+  }, { threshold: .1 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+
+</body>
+</html>

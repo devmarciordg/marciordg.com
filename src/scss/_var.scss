@@ -16,6 +16,13 @@
     font-style: normal;
 }
 
+// System mono stack — no extra font request, keeps the self-hosted-fonts performance story intact.
+@mixin mono($w : 400) {
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Menlo, Consolas, monospace;
+    font-weight: $w;
+    font-style: normal;
+}
+
 //Tamanho de Fontes
 $type-scale-base: 1.4rem;
 $type-scale-ratio: 1.25;
@@ -76,3 +83,30 @@ $light-3: #333333;
 
 //util
 $max-container:1200px;
+$radius-sm: 2px;
+
+// Shared scanline sweep — opted into per-component (see solutions/arsenal/projects)
+// rather than baked into .card globally, since .protocol__card positions its
+// timeline dot outside its own bounds and would get clipped by overflow: hidden.
+@mixin scanline-hover {
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: -6%;
+        height: 1px;
+        z-index: 2;
+        opacity: 0;
+        background: linear-gradient(90deg, transparent, var(--primary) 20%, var(--primary) 80%, transparent);
+        box-shadow: 0 0 8px var(--primary-t);
+        pointer-events: none;
+    }
+
+    &:hover::before {
+        animation: scanline 1.1s ease-in-out;
+    }
+}

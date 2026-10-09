@@ -22,10 +22,16 @@
 
     &__question {
         background-color: var(--dark-1);
+        border: 1px solid var(--light-3);
         padding: x.$u5;
-        border-radius: x.$u3;
+        border-radius: 0;
         width: 90%;
         max-width: 900px;
+        transition: border-color 200ms ease-in-out;
+
+        &:hover {
+            border-color: var(--light-2);
+        }
 
         &__titles {
             display: flex;

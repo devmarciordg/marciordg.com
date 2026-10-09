@@ -18,7 +18,9 @@
 
     &__text {
         color: var(--light-2);
-        font-size: x.$text-base;
+        @include x.mono(400);
+        letter-spacing: 0.02em;
+        font-size: x.$text-sm;
         text-align: center;
     }
 

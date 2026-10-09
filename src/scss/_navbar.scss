@@ -21,6 +21,7 @@ header {
 
     &__logo {
         @include x.space(700);
+        letter-spacing: 0.01em;
 
         span {
             color: var(--primary);
@@ -32,18 +33,20 @@ header {
     }
 
     &__cta {
-        font-size: x.$text-base;
+        font-size: x.$text-sm;
         background-color: var(--dark-3);
         padding: x.$u2 x.$u5;
         border: 1px var(--light-2) solid;
-        border-radius: x.$u1;
+        border-radius: x.$radius-sm;
         text-transform: uppercase;
+        letter-spacing: 0.1em;
         color: var(--light-2);
 
-        @include x.space(600);
+        @include x.mono(700);
 
         &:hover {
             border-color: var(--primary);
+            color: var(--light-1);
         }
     }
 }

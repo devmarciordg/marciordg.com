@@ -6,8 +6,24 @@
 
 
     &__small {
-        font-size: x.$text-base;
+        font-size: x.$text-xs;
         color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: x.$u2;
+        @include x.mono(700);
+        text-transform: uppercase;
+        letter-spacing: 0.24em;
+
+        &::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            flex: none;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 8px var(--primary);
+        }
     }
 
     &__content {
@@ -19,6 +35,7 @@
     }
 
     &__card {
+        @include x.scanline-hover;
         flex: 1;
         min-width: 300px;
         max-width: 700px;
@@ -29,7 +46,7 @@
             width: 32px;
             height: 32px;
             padding: x.$u1;
-            border-radius: x.$u1;
+            border-radius: x.$radius-sm;
         }
 
         &__title {
